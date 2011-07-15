@@ -4,10 +4,11 @@ Elisandra
 The aim of this project is to build a system that manages a zero-configuration installation of applications
 on your network.
 
-In the same way that .deb files or .rpm files can be installed on a user's system without requiring
-input from the user, the idea is that a new filetype (.eli) can provide additional network level
-information in order for a network controller component (Elisandra) can install an application across the
-network, by reading meta data in the .eli package to see what requirements the application has in terms of
+In the same way that .deb files or .rpm files can be installed on a user's system without requiring input
+from the user, the idea is that a new filetype (.eli) will provide a bundle containing the system level
+packages, but in addition will contain further network level information in order for a network controller
+component (Elisandra) to install an application across multiple nodes of the network. Elisandra would do
+this by reading meta data in the .eli package to see what requirements the application has in terms of
 runtime dependencies (other applications running on the network), load balancer configuration, how many
 nodes the application should be deployed across at a minimum, any special scaling considerations, etc.
 
@@ -17,24 +18,25 @@ deployed, on which IP addresses or hosts, elisandra needs to take care of provid
 
 So for example, consider that you have a service which should be deployed on a minimum of 2 nodes behind a
 load balancer, and autoscale adding an additional node, when the average CPU load average across the
-existing servicing nodes over the last minute is over 70%, then the meta data would provide this
-information abstractly in a structured way. Elisandra would then inspect the local network to see what
-nodes are available / free to use, take two from the pool, and record in a registry that these nodes are
-assigned to this new service. If a different product comes along that depends on the first service, it can
-declare a dependency on it. Elisandra will see in her registry that this service is already deployed and
-running, and will not need to install it again. Additionally, it will be able to configure the new service
-to point its integration configuration to the specific nodes/load balancer settings or the service it
-already deployed, without the user even needing to know which nodes the service is running on, which ports,
-etc.
+existing servicing nodes over the last minute is over 70%. The meta data of the package would provide this
+information abstractly in a structured form that Elisandra can understand. Elisandra would then inspect the
+local network to see what nodes are available / free to use, take two from the pool, and record in a
+registry that these nodes are now assigned to this new service (and of course take care of installing and
+configuring this service). If a different product comes along that depends on the first service, it can
+declare a dependency on it in its network package. Elisandra will see in her registry that this service is
+already deployed and running, and will therefore not install it again. Additionally, it will be able to
+configure the new service to point its integration configuration to the specific nodes/load balancer
+settings or the service it already deployed, without the user even needing to know which nodes the service
+is running on, which ports, etc.
 
-The ultimate goal is that software will be delivered as a .eli file, which includes system installation
-packages (e.g. rpms, debs, etc) plus meta data for Elisandra. Then a user wants to install it - they issue
-a statement against the Elisandra console to install a new package, and Elisandra downloads it, and
-installs it on the network, in the same way a user runs apt-get install on a Debian console on their local
-machine.
+Elisandra will have a console that a user can issue commands against, and a web interface for monitoring,
+browsing and installing network packages. If a user wants to install a package - they can issue a statement
+against the Elisandra console to install the new package, and Elisandra will download it and install it on
+the network, in the same way a user runs apt-get install on a Debian console on their local machine.
 
-In much the same way the network packages should be published to server, and updates can be automatically
-delivered when Elisandra is instructed to see if new versions of the network packages exist.
+In same way system packages such as .deb and .rpm files are published to a server for aptitude or yum to
+monitor, Elisandra will take care of fetching updates automatically as they are published on the network
+package servers listed as sources in the Elisandra config.
 
 Ideally Elisandra will also take care of installing hypervisors on first boot using e.g. cobbler/kickstart
 and taking care of installing VMs using e.g. koan, so that in the end the setup of the entire network is a
