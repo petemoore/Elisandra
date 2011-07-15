@@ -1,45 +1,51 @@
 Elisandra
 =========
 
-The aim of this project is to build a system that manages a zero-configuration installation of applications on your network.
+The aim of this project is to build a system that manages a zero-configuration installation of applications
+on your network.
 
-In the same way that .deb files or .rpm files can be installed on a user's system without requiring information from the user,
-the idea is that a new filetype (.eli) can provide additional network level information in order for a network controller
-component (Elisandra) can install an application across the network, by reading meta data in the .eli package to see what
-requirements the application has in terms of runtime dependencies (other applications running on the network), load balancer
-configuration, how many nodes the application should be deployed across at a minimum, any special scaling considerations, etc.
+In the same way that .deb files or .rpm files can be installed on a user's system without requiring
+input from the user, the idea is that a new filetype (.eli) can provide additional network level
+information in order for a network controller component (Elisandra) can install an application across the
+network, by reading meta data in the .eli package to see what requirements the application has in terms of
+runtime dependencies (other applications running on the network), load balancer configuration, how many
+nodes the application should be deployed across at a minimum, any special scaling considerations, etc.
 
-The package producer this meta data, not the user of the application. Since the package producer does not know the specific
-information about what the domain is of the network, what other applications are deployed, on which IP addresses or hosts,
-elisandra needs to take care of providing this information.
+The package producer provides this meta data, not the user of the application. Since the package producer
+does not know the specific information about what the domain is of the network, what other applications are
+deployed, on which IP addresses or hosts, elisandra needs to take care of providing this information.
 
-So for example, consider that you have a service which should be deployed on a minimum of 2 nodes behind a load balancer, and
-autoscales adding an additional node, when the average CPU load average across the existing servicing nodes over a period of
-a minute is over 70%, then the meta data would provide this information abstractly in a structured way. Elisandra would then
-inspect the local network to see what nodes are available / free to use, take two from the pool, and record in a registry
-that these nodes are assigned to this new service. If a different product comes along that depends on the first service, it
-can declare a dependency on it. Elisandra will see in her registry that this service is already deployed and running, and
-will not need to install it again. Additionally, it will be able to configure the new service to point its integration
-configuration to the specific nodes/load balancer settings or the service it already deployed, without the user even needing
-to know which nodes the service is running on, which ports, etc.
+So for example, consider that you have a service which should be deployed on a minimum of 2 nodes behind a
+load balancer, and autoscale adding an additional node, when the average CPU load average across the
+existing servicing nodes over the last minute is over 70%, then the meta data would provide this
+information abstractly in a structured way. Elisandra would then inspect the local network to see what
+nodes are available / free to use, take two from the pool, and record in a registry that these nodes are
+assigned to this new service. If a different product comes along that depends on the first service, it can
+declare a dependency on it. Elisandra will see in her registry that this service is already deployed and
+running, and will not need to install it again. Additionally, it will be able to configure the new service
+to point its integration configuration to the specific nodes/load balancer settings or the service it
+already deployed, without the user even needing to know which nodes the service is running on, which ports,
+etc.
 
-The ultimate goal is that software will be delivered as a .eli file, which includes system installation packages (e.g. rpms,
-debs, etc) plus meta data for Elisandra. Then a user wants to install it - they issue a statement against the Elisandra
-console to install a new package, and Elisandra downloads it, and installs it on the network, in the same way a user runs
-apt-get install on a Debian console on their local machine.
+The ultimate goal is that software will be delivered as a .eli file, which includes system installation
+packages (e.g. rpms, debs, etc) plus meta data for Elisandra. Then a user wants to install it - they issue
+a statement against the Elisandra console to install a new package, and Elisandra downloads it, and
+installs it on the network, in the same way a user runs apt-get install on a Debian console on their local
+machine.
 
-In much the same way the network packages should be published to server, and updates can be automatically delivered when
-Elisandra is instructed to see if new versions of the network packages exist.
+In much the same way the network packages should be published to server, and updates can be automatically
+delivered when Elisandra is instructed to see if new versions of the network packages exist.
 
-Ideally Elisandra will also take care of installing hypervisors on first boot using e.g. cobbler/kickstart and taking care
-of installing VMs using e.g. koan, so that in the end the setup of the entire network is a case of installing a base machine
-with Elisandra, and then simply connecting more machines to your network in order for Elisandra to take care of them.
+Ideally Elisandra will also take care of installing hypervisors on first boot using e.g. cobbler/kickstart
+and taking care of installing VMs using e.g. koan, so that in the end the setup of the entire network is a
+case of installing a base machine with Elisandra, and then simply connecting more machines to your network
+in order for Elisandra to take care of them.
 
-I see this project using a suite of existing open source products and standards, such as cobbler, xen, kvm, koan, yum,
-aptitude, eucalyptus, puppet, and probably many others too.
+I see this project using a suite of existing open source products and standards, such as cobbler, xen, kvm,
+koan, yum, aptitude, eucalyptus, puppet, revolutioner, and probably many others too.
 
-I hope you join with me along the journey! There will be a lot of work to do, and some tough decisions to make, but the
-result should make it all worthwhile.
+I hope you join with me along the journey! There will be a lot of work to do, and some tough decisions to
+make, but the result should make it all worthwhile.
 
 Peter Moore
 15 July 2011
